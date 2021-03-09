@@ -18,7 +18,7 @@
 					"functionName": "CheckPipelineStatus",
 					"method": "POST",
 					"body": {
-						"value": "@json(\nconcat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n\t\"orchestratorName\": \"',variables('orchestratorName'),'\",\n\"orchestratorType\": \"',variables('orchestratorType'),'\",\n\t\"pipelineName\": \"',variables('pipelineName'),'\",\n\"runId\": \"',variables('runId'),'\"\n}')\n)",
+						"value": "@concat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n\t\"orchestratorName\": \"',variables('orchestratorName'),'\",\n    \"orchestratorType\": \"',variables('orchestratorType'),'\",\n    \"pipelineName\": \"',variables('pipelineName'),'\",\n    \"runId\": \"',variables('runId'),'\"\n}')",
 						"type": "Expression"
 					}
 				},
