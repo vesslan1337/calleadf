@@ -1,6 +1,5 @@
 {
 	"name": "FrameworkFunctions",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"description": "Interact with the Azure Functions App used as middle ware when making requests to Worker pipelines. Authentication done at the Function App level.",
 		"annotations": [
@@ -8,15 +7,16 @@
 		],
 		"type": "AzureFunction",
 		"typeProperties": {
-			"functionAppUrl": "",
+			"functionAppUrl": "https://callerffunctionapp.azurewebsites.net",
 			"functionKey": {
 				"type": "AzureKeyVaultSecret",
 				"store": {
 					"referenceName": "Keys",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": "FrameworkFunctionsKey"
+				"secretName": "FunctionDefaultKey"
 			}
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
