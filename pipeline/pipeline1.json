@@ -18,7 +18,13 @@
 					"functionName": "HttpTrigger1",
 					"method": "POST",
 					"body": {
-						"name": "Azure"
+						"tenantId": "580a5de5-d69e-4245-885d-6339e2e76bc3",
+						"applicationId": "59482ffa-d978-4473-a197-1678c02484a6",
+						"authenticationKey": "9bd2fd1c-8832-4c71-b053-ecd8818dd259",
+						"subscriptionId": "41dbffdf-c52c-4c80-be57-e9da2439348a",
+						"resourceGroup": "CalleADF",
+						"factoryName": "CalleDataFactory",
+						"pipelineName": "pipeline1"
 					}
 				},
 				"linkedServiceName": {
