@@ -574,10 +574,12 @@
 				"defaultValue": "NotUsed"
 			},
 			"PipelineName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "02-Parent"
 			},
 			"ThisRunId": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "b57061f0-334f-4828-a9ae-6a6758b7d2fd"
 			}
 		},
 		"variables": {
