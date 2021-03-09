@@ -3,11 +3,12 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Azure Function1",
+				"name": "Get Worker Pipeline Error Details_copy1",
+				"description": "Get the activity error details for the run ID of the worker pipeline called. Returns an array of all errors.",
 				"type": "AzureFunctionActivity",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "7.00:00:00",
+					"timeout": "0.00:10:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -15,33 +16,16 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"functionName": "CheckPipelineStatus",
+					"functionName": "GetActivityErrors",
 					"method": "POST",
 					"body": {
-						"value": "@concat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n\t\"orchestratorName\": \"',variables('orchestratorName'),'\",\n    \"orchestratorType\": \"',variables('orchestratorType'),'\",\n    \"pipelineName\": \"',variables('pipelineName'),'\",\n    \"runId\": \"',variables('runId'),'\"\n}')",
+						"value": "@concat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n    \"orchestratorName\": \"',variables('orchestratorName'),'\",\n    \"orchestratorType\": \"',variables('orchestratorType'),'\",\n    \"pipelineName\": \"',variables('pipelineName'),'\",\n    \"runId\": \"',variables('runId'),'\"\n}')",
 						"type": "Expression"
 					}
 				},
 				"linkedServiceName": {
 					"referenceName": "FrameworkFunctions",
 					"type": "LinkedServiceReference"
-				}
-			},
-			{
-				"name": "Set variable1",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Azure Function1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "tenantId",
-					"value": "abc"
 				}
 			}
 		],
@@ -52,11 +36,11 @@
 			},
 			"applicationId": {
 				"type": "String",
-				"defaultValue": "59482ffa-d978-4473-a197-1678c02484a6"
+				"defaultValue": "A72E314A-FBA1-48D1-AAB4-7F4B238880A1"
 			},
 			"authenticationKey": {
 				"type": "String",
-				"defaultValue": "9bd2fd1c-8832-4c71-b053-ecd8818dd259"
+				"defaultValue": "3Z1qc~uiYX.95~_MbtA.6AE370yCl3NcmC"
 			},
 			"subscriptionId": {
 				"type": "String",
@@ -68,11 +52,11 @@
 			},
 			"pipelineName": {
 				"type": "String",
-				"defaultValue": "pipeline1"
+				"defaultValue": "Intentional Error"
 			},
 			"runId": {
 				"type": "String",
-				"defaultValue": "2cf7f390-e915-4f90-87a8-66d2fb302658"
+				"defaultValue": "454a2e69-62c4-460b-a390-d896e4d738aa"
 			},
 			"orchestratorName": {
 				"type": "String",
