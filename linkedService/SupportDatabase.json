@@ -1,6 +1,5 @@
 {
 	"name": "SupportDatabase",
-	"type": "Microsoft.DataFactory/factories/linkedservices",
 	"properties": {
 		"description": "Connection between ADF and processing framework metadata SQLDB.",
 		"annotations": [
@@ -14,8 +13,9 @@
 					"referenceName": "Keys",
 					"type": "LinkedServiceReference"
 				},
-				"secretName": ""
+				"secretName": "SQLDBConnectionString"
 			}
 		}
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/linkedservices"
 }
