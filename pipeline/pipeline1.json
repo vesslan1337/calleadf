@@ -18,13 +18,8 @@
 					"functionName": "HttpTrigger1",
 					"method": "POST",
 					"body": {
-						"tenantId": "580a5de5-d69e-4245-885d-6339e2e76bc3",
-						"applicationId": "59482ffa-d978-4473-a197-1678c02484a6",
-						"authenticationKey": "9bd2fd1c-8832-4c71-b053-ecd8818dd259",
-						"subscriptionId": "41dbffdf-c52c-4c80-be57-e9da2439348a",
-						"resourceGroup": "CalleADF",
-						"factoryName": "CalleDataFactory",
-						"pipelineName": "pipeline1"
+						"value": "@json(\nconcat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroup\": \"',variables('resourceGroup'),'\",\n\t\"factoryName\": \"',variables('factoryName'),'\",\n\t\"pipelineName\": \"',variables('pipelineName'),'\"\n}')\n)",
+						"type": "Expression"
 					}
 				},
 				"linkedServiceName": {
@@ -45,14 +40,39 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "a",
+					"variableName": "tenantId",
 					"value": "abc"
 				}
 			}
 		],
 		"variables": {
-			"a": {
-				"type": "String"
+			"tenantId": {
+				"type": "String",
+				"defaultValue": "580a5de5-d69e-4245-885d-6339e2e76bc3"
+			},
+			"applicationId": {
+				"type": "String",
+				"defaultValue": "59482ffa-d978-4473-a197-1678c02484a6"
+			},
+			"authenticationKey": {
+				"type": "String",
+				"defaultValue": "9bd2fd1c-8832-4c71-b053-ecd8818dd259"
+			},
+			"subscriptionId": {
+				"type": "String",
+				"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
+			},
+			"resourceGroup": {
+				"type": "String",
+				"defaultValue": "CalleADF"
+			},
+			"factoryName": {
+				"type": "String",
+				"defaultValue": "CalleDataFactory"
+			},
+			"pipelineName": {
+				"type": "String",
+				"defaultValue": "pipeline1"
 			}
 		},
 		"annotations": []
