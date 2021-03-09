@@ -1264,13 +1264,16 @@
 		],
 		"parameters": {
 			"executionId": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "60925d1b-53c4-4a43-b4d9-2e84344518a9"
 			},
 			"stageId": {
-				"type": "int"
+				"type": "int",
+				"defaultValue": 1
 			},
 			"pipelineId": {
-				"type": "int"
+				"type": "int",
+				"defaultValue": 3
 			}
 		},
 		"variables": {
