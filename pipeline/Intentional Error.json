@@ -71,7 +71,7 @@
 		"parameters": {
 			"RaiseErrors": {
 				"type": "string",
-				"defaultValue": "false"
+				"defaultValue": "true"
 			},
 			"WaitTime": {
 				"type": "int",
