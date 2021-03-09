@@ -15,15 +15,15 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"functionName": "HttpTrigger1",
+					"functionName": "CheckPipelineStatus",
 					"method": "POST",
 					"body": {
-						"value": "@json(\nconcat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroup\": \"',variables('resourceGroup'),'\",\n\t\"factoryName\": \"',variables('factoryName'),'\",\n\t\"pipelineName\": \"',variables('pipelineName'),'\"\n}')\n)",
+						"value": "@json(\nconcat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n\t\"orchestratorName\": \"',variables('orchestratorName'),'\",\n\"orchestratorType\": \"',variables('orchestratorType'),'\",\n\t\"pipelineName\": \"',variables('pipelineName'),'\",\n\"runId\": \"',variables('runId'),'\"\n}')\n)",
 						"type": "Expression"
 					}
 				},
 				"linkedServiceName": {
-					"referenceName": "AzureFunction1",
+					"referenceName": "FrameworkFunctions",
 					"type": "LinkedServiceReference"
 				}
 			},
@@ -62,17 +62,25 @@
 				"type": "String",
 				"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
 			},
-			"resourceGroup": {
+			"resourceGroupName": {
 				"type": "String",
 				"defaultValue": "CalleADF"
-			},
-			"factoryName": {
-				"type": "String",
-				"defaultValue": "CalleDataFactory"
 			},
 			"pipelineName": {
 				"type": "String",
 				"defaultValue": "pipeline1"
+			},
+			"runId": {
+				"type": "String",
+				"defaultValue": "2cf7f390-e915-4f90-87a8-66d2fb302658"
+			},
+			"orchestratorName": {
+				"type": "String",
+				"defaultValue": "CalleDataFactory"
+			},
+			"orchestratorType": {
+				"type": "String",
+				"defaultValue": "ADF"
 			}
 		},
 		"annotations": []
