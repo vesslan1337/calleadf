@@ -1,9 +1,9 @@
 {
-	"name": "Error",
+	"name": "Error Handler - Azure Function",
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Pipeline Error",
+				"name": "Get Pipeline Error by RunId",
 				"description": "Get the activity error details for the run ID of the worker pipeline called. Returns an array of all errors.",
 				"type": "AzureFunctionActivity",
 				"dependsOn": [],
@@ -33,7 +33,7 @@
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Get Pipeline Error",
+						"activity": "Get Pipeline Error by RunId",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -42,7 +42,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Get Pipeline Error').output.Errors",
+						"value": "@activity('Get Pipeline Error by RunId').output.Errors",
 						"type": "Expression"
 					},
 					"activities": [
