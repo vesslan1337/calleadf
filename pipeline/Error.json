@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Worker Pipeline Error Details_copy1",
+				"name": "Get Pipeline Error",
 				"description": "Get the activity error details for the run ID of the worker pipeline called. Returns an array of all errors.",
 				"type": "AzureFunctionActivity",
 				"dependsOn": [],
