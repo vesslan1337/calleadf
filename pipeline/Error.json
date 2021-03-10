@@ -31,7 +31,8 @@
 		],
 		"parameters": {
 			"runId": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "d867a742-7ec2-4544-9b79-865b10e505d9"
 			}
 		},
 		"variables": {
