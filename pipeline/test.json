@@ -32,25 +32,6 @@
 				}
 			},
 			{
-				"name": "For each pipeline run",
-				"type": "ForEach",
-				"dependsOn": [
-					{
-						"activity": "Get ADF Pipeline Runs",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"items": {
-						"value": "@activity('Get ADF Pipeline Runs').output.value",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "Filter1",
 				"type": "Filter",
 				"dependsOn": [
