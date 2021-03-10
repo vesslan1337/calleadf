@@ -32,36 +32,6 @@
 			"runId": {
 				"type": "string",
 				"defaultValue": "d867a742-7ec2-4544-9b79-865b10e505d9"
-			},
-			"PipelineName": {
-				"type": "string",
-				"defaultValue": "Task"
-			}
-		},
-		"variables": {
-			"tenantId": {
-				"type": "String",
-				"defaultValue": "580a5de5-d69e-4245-885d-6339e2e76bc3"
-			},
-			"applicationId": {
-				"type": "String",
-				"defaultValue": "A72E314A-FBA1-48D1-AAB4-7F4B238880A1"
-			},
-			"authenticationKey": {
-				"type": "String",
-				"defaultValue": "3Z1qc~uiYX.95~_MbtA.6AE370yCl3NcmC"
-			},
-			"subscriptionId": {
-				"type": "String",
-				"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
-			},
-			"resourceGroupName": {
-				"type": "String",
-				"defaultValue": "CalleADF"
-			},
-			"orchestratorType": {
-				"type": "String",
-				"defaultValue": "ADF"
 			}
 		},
 		"folder": {
