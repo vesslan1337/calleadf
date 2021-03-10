@@ -32,6 +32,23 @@
 				}
 			}
 		],
+		"parameters": {
+			"PipelineName": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"SubscriptionId": {
+				"type": "String"
+			},
+			"ResourceGroupName": {
+				"type": "String"
+			},
+			"QueryRunDays": {
+				"type": "String",
+				"defaultValue": "-7"
+			}
+		},
 		"folder": {
 			"name": "Alt 2"
 		},
