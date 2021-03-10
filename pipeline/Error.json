@@ -47,7 +47,7 @@
 					},
 					"activities": [
 						{
-							"name": "Lookup1",
+							"name": "Insert Error to SQL",
 							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
@@ -62,7 +62,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "insert into [dbo].[TaskInstanceError]\nSELECT @activity('Get Pipeline Error').output.RunId, @activity('Get Pipeline Error').output.PipelineName, @item().ActivityName, @item().ErrorMessage\n",
+										"value": "@insert into [dbo].[TaskInstanceError]\nSELECT pipeline().parameters.runId, pipeline().parameters.PipelineName, item().ActivityName, item().ErrorMessage",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -112,9 +112,6 @@
 			"orchestratorType": {
 				"type": "String",
 				"defaultValue": "ADF"
-			},
-			"test": {
-				"type": "String"
 			}
 		},
 		"annotations": []
