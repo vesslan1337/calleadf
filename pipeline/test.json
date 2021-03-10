@@ -36,6 +36,10 @@
 			"PipelineName": {
 				"type": "string",
 				"defaultValue": "Task_copy1"
+			},
+			"TriggerTime": {
+				"type": "string",
+				"defaultValue": "2020-01-01"
 			}
 		},
 		"variables": {
