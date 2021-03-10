@@ -136,6 +136,9 @@
 				"defaultValue": "ADF"
 			}
 		},
+		"folder": {
+			"name": "Alt 1"
+		},
 		"annotations": []
 	}
 }
