@@ -19,7 +19,7 @@
 					"functionName": "GetActivityErrors",
 					"method": "POST",
 					"body": {
-						"value": "@concat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n    \"orchestratorName\": \"',variables('orchestratorName'),'\",\n    \"orchestratorType\": \"',variables('orchestratorType'),'\",\n    \"pipelineName\": \"',pipeline().parameters.PipelineName,'\",\n    \"runId\": \"',pipeline().parameters.runId,'\"\n}')",
+						"value": "@concat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n    \"orchestratorName\": \"',pipeline().DataFactory,'\",\n    \"orchestratorType\": \"',variables('orchestratorType'),'\",\n    \"pipelineName\": \"',pipeline().parameters.PipelineName,'\",\n    \"runId\": \"',pipeline().parameters.runId,'\"\n}')",
 						"type": "Expression"
 					}
 				},
