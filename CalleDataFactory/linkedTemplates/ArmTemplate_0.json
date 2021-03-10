@@ -630,7 +630,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Get Worker Pipeline Error Details_copy1",
+						"name": "Get Pipeline Error",
 						"description": "Get the activity error details for the run ID of the worker pipeline called. Returns an array of all errors.",
 						"type": "AzureFunctionActivity",
 						"dependsOn": [],
@@ -647,7 +647,7 @@
 							"method": "POST",
 							"headers": {},
 							"body": {
-								"value": "@concat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n    \"orchestratorName\": \"',variables('orchestratorName'),'\",\n    \"orchestratorType\": \"',variables('orchestratorType'),'\",\n    \"pipelineName\": \"',variables('pipelineName'),'\",\n    \"runId\": \"',pipeline().parameters.runId,'\"\n}')",
+								"value": "@concat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n    \"orchestratorName\": \"',pipeline().DataFactory,'\",\n    \"orchestratorType\": \"',variables('orchestratorType'),'\",\n    \"pipelineName\": \"',pipeline().parameters.PipelineName,'\",\n    \"runId\": \"',pipeline().parameters.runId,'\"\n}')",
 								"type": "Expression"
 							}
 						},
@@ -659,7 +659,12 @@
 				],
 				"parameters": {
 					"runId": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "d867a742-7ec2-4544-9b79-865b10e505d9"
+					},
+					"PipelineName": {
+						"type": "string",
+						"defaultValue": "Task"
 					}
 				},
 				"variables": {
@@ -682,14 +687,6 @@
 					"resourceGroupName": {
 						"type": "String",
 						"defaultValue": "CalleADF"
-					},
-					"pipelineName": {
-						"type": "String",
-						"defaultValue": "Intentional Error"
-					},
-					"orchestratorName": {
-						"type": "String",
-						"defaultValue": "CalleDataFactory"
 					},
 					"orchestratorType": {
 						"type": "String",
@@ -875,6 +872,10 @@
 								"runId": {
 									"value": "@pipeline().RunId",
 									"type": "Expression"
+								},
+								"PipelineName": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
 								}
 							}
 						}
@@ -900,6 +901,10 @@
 							"parameters": {
 								"runId": {
 									"value": "@pipeline().RunId",
+									"type": "Expression"
+								},
+								"PipelineName": {
+									"value": "@pipeline().Pipeline",
 									"type": "Expression"
 								}
 							}
