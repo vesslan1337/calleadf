@@ -34,15 +34,18 @@
 		],
 		"parameters": {
 			"PipelineName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Task_copy1"
 			}
 		},
 		"variables": {
 			"SubscriptionId": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
 			},
 			"ResourceGroupName": {
-				"type": "String"
+				"type": "String",
+				"defaultValue": "CalleADF"
 			},
 			"QueryRunDays": {
 				"type": "String",
