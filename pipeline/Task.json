@@ -135,6 +135,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "Alt 1"
+		},
 		"annotations": []
 	}
 }
