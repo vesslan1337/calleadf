@@ -1,0 +1,125 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "CalleDataFactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Error Handler - ADF API')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get ADF Pipeline Run",
+						"description": "https://docs.microsoft.com/sv-se/rest/api/datafactory/pipelineruns/querybyfactory#runqueryfilteroperand",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "https://management.azure.com/subscriptions/@{variables('SubscriptionId')}/resourceGroups/@{variables('ResourceGroupName')}/providers/Microsoft.DataFactory/factories/@{pipeline().DataFactory}/pipelineruns/@{pipeline().parameters.runId}?api-version=2018-06-01",
+								"type": "Expression"
+							},
+							"method": "GET",
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://management.core.windows.net/"
+							}
+						}
+					},
+					{
+						"name": "SP Insert Error",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Get ADF Pipeline Run",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[pr_insertError]",
+							"storedProcedureParameters": {
+								"ActivityName": {
+									"value": null,
+									"type": "String"
+								},
+								"ErrorMessage": {
+									"value": {
+										"value": "@activity('Get ADF Pipeline Run').output.Message",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PipelineName": {
+									"value": {
+										"value": "@activity('Get ADF Pipeline Run').output.pipelineName",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"runId": {
+									"value": {
+										"value": "@pipeline().parameters.runId",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "SupportDatabase",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"parameters": {
+					"runId": {
+						"type": "string",
+						"defaultValue": "c63294ef-c9e7-4a18-9acf-579cd14621d4"
+					}
+				},
+				"variables": {
+					"SubscriptionId": {
+						"type": "String",
+						"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
+					},
+					"ResourceGroupName": {
+						"type": "String",
+						"defaultValue": "CalleADF"
+					}
+				},
+				"folder": {
+					"name": "Alt 1 - RunId"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}

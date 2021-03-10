@@ -4100,12 +4100,66 @@
 								"resource": "https://management.core.windows.net/"
 							}
 						}
+					},
+					{
+						"name": "SP Insert Error",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Get ADF Pipeline Run",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[[dbo].[pr_insertError]",
+							"storedProcedureParameters": {
+								"ActivityName": {
+									"value": null,
+									"type": "String"
+								},
+								"ErrorMessage": {
+									"value": {
+										"value": "@activity('Get ADF Pipeline Run').output.Message",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"PipelineName": {
+									"value": {
+										"value": "@activity('Get ADF Pipeline Run').output.pipelineName",
+										"type": "Expression"
+									},
+									"type": "String"
+								},
+								"runId": {
+									"value": {
+										"value": "@pipeline().parameters.runId",
+										"type": "Expression"
+									},
+									"type": "String"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "SupportDatabase",
+							"type": "LinkedServiceReference"
+						}
 					}
 				],
 				"parameters": {
 					"runId": {
 						"type": "string",
-						"defaultValue": "d867a742-7ec2-4544-9b79-865b10e505d9"
+						"defaultValue": "c63294ef-c9e7-4a18-9acf-579cd14621d4"
 					}
 				},
 				"variables": {
@@ -4123,7 +4177,9 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SupportDatabase')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Error Handler - Azure Function')]",
