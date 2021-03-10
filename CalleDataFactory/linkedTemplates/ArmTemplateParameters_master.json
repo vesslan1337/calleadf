@@ -12,7 +12,7 @@
 			"value": "https://CalleRFKeyVault.vault.azure.net/"
 		},
 		"SupportDatabase_properties_typeProperties_connectionString_secretName": {
-			"value": "SQLDBConnectionString"
+			"value": "calledbConnectionString"
 		},
 		"containerUri": {
 			"value": ""

@@ -17,7 +17,7 @@
 		},
 		"SupportDatabase_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
-			"defaultValue": "SQLDBConnectionString"
+			"defaultValue": "calledbConnectionString"
 		},
 		"containerUri": {
 			"type": "string",
