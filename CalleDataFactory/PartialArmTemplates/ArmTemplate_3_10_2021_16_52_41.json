@@ -1,0 +1,562 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "CalleDataFactory"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/Error Handler - ADF API')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get ADF Pipeline Run",
+						"description": "https://docs.microsoft.com/sv-se/rest/api/datafactory/pipelineruns/querybyfactory#runqueryfilteroperand",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "https://management.azure.com/subscriptions/@{variables('SubscriptionId')}/resourceGroups/@{variables('ResourceGroupName')}/providers/Microsoft.DataFactory/factories/@{pipeline().DataFactory}/pipelineruns/@{pipeline().parameters.runId}?api-version=2018-06-01",
+								"type": "Expression"
+							},
+							"method": "GET",
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://management.core.windows.net/"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"runId": {
+						"type": "string",
+						"defaultValue": "d867a742-7ec2-4544-9b79-865b10e505d9"
+					}
+				},
+				"variables": {
+					"SubscriptionId": {
+						"type": "String",
+						"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
+					},
+					"ResourceGroupName": {
+						"type": "String",
+						"defaultValue": "CalleADF"
+					}
+				},
+				"folder": {
+					"name": "Alt 1 - RunId"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Error Handler - Azure Function')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get Pipeline Error by RunId",
+						"description": "Get the activity error details for the run ID of the worker pipeline called. Returns an array of all errors.",
+						"type": "AzureFunctionActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.00:10:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"functionName": "GetActivityErrors",
+							"method": "POST",
+							"body": {
+								"value": "@concat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n    \"orchestratorName\": \"',pipeline().DataFactory,'\",\n    \"orchestratorType\": \"',variables('orchestratorType'),'\",\n    \"pipelineName\": \"',pipeline().parameters.PipelineName,'\",\n    \"runId\": \"',pipeline().parameters.runId,'\"\n}')",
+								"type": "Expression"
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "FrameworkFunctions",
+							"type": "LinkedServiceReference"
+						}
+					},
+					{
+						"name": "For each error",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Get Pipeline Error by RunId",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get Pipeline Error by RunId').output.Errors",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "SP Insert Error",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[pr_insertError]",
+										"storedProcedureParameters": {
+											"ActivityName": {
+												"value": {
+													"value": "@item().ActivityName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"ErrorMessage": {
+												"value": {
+													"value": "@item().ErrorMessage",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"PipelineName": {
+												"value": {
+													"value": "@pipeline().parameters.PipelineName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"runId": {
+												"value": {
+													"value": "@pipeline().parameters.runId",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "SupportDatabase",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"runId": {
+						"type": "string",
+						"defaultValue": "d867a742-7ec2-4544-9b79-865b10e505d9"
+					},
+					"PipelineName": {
+						"type": "string",
+						"defaultValue": "Task"
+					}
+				},
+				"variables": {
+					"tenantId": {
+						"type": "String",
+						"defaultValue": "580a5de5-d69e-4245-885d-6339e2e76bc3"
+					},
+					"applicationId": {
+						"type": "String",
+						"defaultValue": "A72E314A-FBA1-48D1-AAB4-7F4B238880A1"
+					},
+					"authenticationKey": {
+						"type": "String",
+						"defaultValue": "3Z1qc~uiYX.95~_MbtA.6AE370yCl3NcmC"
+					},
+					"subscriptionId": {
+						"type": "String",
+						"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
+					},
+					"resourceGroupName": {
+						"type": "String",
+						"defaultValue": "CalleADF"
+					},
+					"orchestratorType": {
+						"type": "String",
+						"defaultValue": "ADF"
+					}
+				},
+				"folder": {
+					"name": "Alt 1 - RunId"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Parent')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Task",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": false,
+							"parameters": {
+								"RaiseErrors": "true",
+								"WaitTime": "1"
+							}
+						}
+					}
+				],
+				"variables": {
+					"runid": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Alt 1 - RunId"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Task')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Task')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"description": "Framework development worker simulator.",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": {
+								"value": "@pipeline().parameters.WaitTime",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Raise Errors or Not",
+						"description": "Framework development worker simulator.",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Wait1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(pipeline().parameters.RaiseErrors,'true')",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Call Fail Procedure",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.00:10:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[FailProcedure]",
+										"storedProcedureParameters": {
+											"RaiseError": {
+												"value": {
+													"value": "@pipeline().parameters.RaiseErrors",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "SupportDatabase",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Raise Errors or Not",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Error Handler - Azure Function",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": false,
+							"parameters": {
+								"runId": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								},
+								"PipelineName": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							}
+						}
+					},
+					{
+						"name": "Execute Pipeline1_copy1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Wait1",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Error Handler - Azure Function",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": false,
+							"parameters": {
+								"runId": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								},
+								"PipelineName": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							}
+						}
+					}
+				],
+				"parameters": {
+					"RaiseErrors": {
+						"type": "string"
+					},
+					"WaitTime": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Alt 1 - RunId"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/Error Handler - Azure Function')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Error Handler - ADF API_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Get ADF Pipeline Runs",
+						"description": "https://docs.microsoft.com/sv-se/rest/api/datafactory/pipelineruns/querybyfactory#runqueryfilteroperand",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "https://management.azure.com/subscriptions/@{variables('SubscriptionId')}/resourceGroups/@{variables('ResourceGroupName')}/providers/Microsoft.DataFactory/factories/@{pipeline().DataFactory}/queryPipelineRuns?api-version=2018-06-01",
+								"type": "Expression"
+							},
+							"method": "POST",
+							"body": {
+								"value": "{\n  \"lastUpdatedAfter\": \"@{adddays(utcnow(),int(variables('QueryRunDays')))}\",\n  \"lastUpdatedBefore\": \"@{utcnow()}\",\n  \"filters\": [\n    {\n      \"operand\": \"PipelineName\",\n      \"operator\": \"Equals\",\n      \"values\": [\n        \"@{pipeline().parameters.PipelineName}\"\n      ]\n    }\n  ]\n}",
+								"type": "Expression"
+							},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://management.core.windows.net/"
+							}
+						}
+					},
+					{
+						"name": "Filter Pipeline Runs by TriggerTime",
+						"type": "Filter",
+						"dependsOn": [
+							{
+								"activity": "Get ADF Pipeline Runs",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Get ADF Pipeline Runs').output.value",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@equals(item().parameters.TriggerTime, pipeline().parameters.TriggerTime)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "For each Pipeline Run",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Filter Pipeline Runs by TriggerTime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Filter Pipeline Runs by TriggerTime').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "Switch1",
+									"type": "Switch",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"on": {
+											"value": "@item().Status",
+											"type": "Expression"
+										},
+										"cases": [
+											{
+												"value": "Succeeded",
+												"activities": [
+													{
+														"name": "Set variable1",
+														"type": "SetVariable",
+														"dependsOn": [],
+														"userProperties": [],
+														"typeProperties": {
+															"variableName": "WhatToDo",
+															"value": "Uppdatera [meta].[TaskInstance]"
+														}
+													}
+												]
+											},
+											{
+												"value": "Failed",
+												"activities": [
+													{
+														"name": "Set variable1_copy1",
+														"type": "SetVariable",
+														"dependsOn": [],
+														"userProperties": [],
+														"typeProperties": {
+															"variableName": "WhatToDo",
+															"value": "Uppdatera [meta].[TaskInstance] och [meta].[TaskInstanceError]"
+														}
+													}
+												]
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"PipelineName": {
+						"type": "string",
+						"defaultValue": "Task_copy1"
+					},
+					"TriggerTime": {
+						"type": "string",
+						"defaultValue": "2020-01-01"
+					}
+				},
+				"variables": {
+					"SubscriptionId": {
+						"type": "String",
+						"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
+					},
+					"ResourceGroupName": {
+						"type": "String",
+						"defaultValue": "CalleADF"
+					},
+					"QueryRunDays": {
+						"type": "String",
+						"defaultValue": "-7"
+					},
+					"WhatToDo": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Alt 2"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		}
+	]
+}

@@ -13,6 +13,43 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Parent_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "Task_copy1",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": false,
+							"parameters": {
+								"RaiseErrors": "true",
+								"WaitTime": "1",
+								"TriggerTime": "2020-01-02"
+							}
+						}
+					}
+				],
+				"variables": {
+					"runid": {
+						"type": "String"
+					}
+				},
+				"folder": {
+					"name": "Alt 2"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Task')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -96,7 +133,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "Error",
+								"referenceName": "Error Handler - Azure Function",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": false,
@@ -126,7 +163,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"pipeline": {
-								"referenceName": "Error",
+								"referenceName": "Error Handler - Azure Function",
 								"type": "PipelineReference"
 							},
 							"waitOnCompletion": false,
@@ -152,7 +189,7 @@
 					}
 				},
 				"folder": {
-					"name": "Alt 1"
+					"name": "Alt 1 - RunId"
 				},
 				"annotations": []
 			},
@@ -210,43 +247,6 @@
 					"Utils"
 				],
 				"lastPublishTime": "2021-03-09T09:59:01Z"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Parent_copy1')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Task_copy1",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": false,
-							"parameters": {
-								"RaiseErrors": "true",
-								"WaitTime": "1",
-								"TriggerTime": "2020-01-02"
-							}
-						}
-					}
-				],
-				"variables": {
-					"runid": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "Alt 2"
-				},
-				"annotations": []
 			},
 			"dependsOn": []
 		},
@@ -3059,7 +3059,7 @@
 					}
 				},
 				"folder": {
-					"name": "Alt 1"
+					"name": "Alt 1 - RunId"
 				},
 				"annotations": []
 			},
