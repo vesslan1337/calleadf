@@ -14,9 +14,9 @@
 					},
 					"waitOnCompletion": false,
 					"parameters": {
-						"RaiseErrors": "false",
+						"RaiseErrors": "true",
 						"WaitTime": "1",
-						"TriggerTime": "2020-01-01"
+						"TriggerTime": "2020-01-02"
 					}
 				}
 			}
