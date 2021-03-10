@@ -50,7 +50,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT 1",
+						"sqlReaderQuery": "select * from [dbo].[TaskInstanceError]",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
