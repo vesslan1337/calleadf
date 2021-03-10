@@ -20,7 +20,7 @@
 						"value": "https://management.azure.com/subscriptions/@{variables('SubscriptionId')}/resourceGroups/@{variables('ResourceGroupName')}/providers/Microsoft.DataFactory/factories/@{pipeline().DataFactory}/pipelineruns/@{pipeline().parameters.runId}?api-version=2018-06-01",
 						"type": "Expression"
 					},
-					"method": "POST",
+					"method": "GET",
 					"authentication": {
 						"type": "MSI",
 						"resource": "https://management.core.windows.net/"
