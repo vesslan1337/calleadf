@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Set variable1",
+				"name": "Set Child pipeline RunId",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
