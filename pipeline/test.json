@@ -22,7 +22,7 @@
 					},
 					"method": "POST",
 					"body": {
-						"value": "{\n  \"lastUpdatedAfter\": \"@{adddays(utcnow(),int(variables('QueryRunDays')))}\",\n  \"lastUpdatedBefore\": \"@{utcnow()}\",\n  \"filters\": [\n    {\n      \"operand\": \"PipelineName\",\n      \"operator\": \"Equals\",\n      \"values\": [\n        \"@{pipeline().parameters.PipelineName}\"\n      ]\n    }\n  ]\n}",
+						"value": "{\n  \"lastUpdatedAfter\": \"@{adddays(utcnow(),int(variables('QueryRunDays')))}\",\n  \"lastUpdatedBefore\": \"@{utcnow()}\",\n  \"filters\": [\n    {\n      \"operand\": \"PipelineName\",\n      \"operator\": \"Equals\",\n      \"values\": [\n        \"@{pipeline().parameters.PipelineName}\"\n      ]\n    },\n{\n      \"operand\": \"parameters.TriggerTime\",\n      \"operator\": \"Equals\",\n      \"values\": [\n        \"@{pipeline().parameters.TriggerTime}\"\n      ]\n    }\n  ]\n}",
 						"type": "Expression"
 					},
 					"authentication": {
