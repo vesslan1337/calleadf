@@ -1,0 +1,34 @@
+{
+	"name": "Parent_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Task_copy1",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false,
+					"parameters": {
+						"RaiseErrors": "true",
+						"WaitTime": "1",
+						"TriggerTime": "2020-01-01"
+					}
+				}
+			}
+		],
+		"variables": {
+			"runid": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "Alt 2"
+		},
+		"annotations": []
+	}
+}
