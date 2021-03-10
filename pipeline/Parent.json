@@ -3,26 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Set Child pipeline RunId",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "Execute Pipeline1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "runid",
-					"value": {
-						"value": "@activity('Execute Pipeline1').output.RunId",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "Execute Pipeline1",
 				"type": "ExecutePipeline",
 				"dependsOn": [],
@@ -32,7 +12,11 @@
 						"referenceName": "Task",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": false
+					"waitOnCompletion": false,
+					"parameters": {
+						"RaiseErrors": "true",
+						"WaitTime": "1"
+					}
 				}
 			}
 		],
