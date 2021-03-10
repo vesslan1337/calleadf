@@ -25,6 +25,9 @@
 				"type": "String"
 			}
 		},
+		"folder": {
+			"name": "Alt 1"
+		},
 		"annotations": []
 	}
 }
