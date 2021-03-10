@@ -60,10 +60,6 @@
 				"type": "String",
 				"defaultValue": "CalleADF"
 			},
-			"orchestratorName": {
-				"type": "String",
-				"defaultValue": "CalleDataFactory"
-			},
 			"orchestratorType": {
 				"type": "String",
 				"defaultValue": "ADF"
