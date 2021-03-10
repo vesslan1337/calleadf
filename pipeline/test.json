@@ -4,7 +4,7 @@
 		"activities": [
 			{
 				"name": "Get ADF Pipeline Runs",
-				"description": "Use the Azure Management API to return a list of data factory pipeline runs within the given time window.",
+				"description": "https://docs.microsoft.com/sv-se/rest/api/datafactory/pipelineruns/querybyfactory#runqueryfilteroperand",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
@@ -32,7 +32,7 @@
 				}
 			},
 			{
-				"name": "Filter1",
+				"name": "Filter Pipeline Runs by TriggerTime",
 				"type": "Filter",
 				"dependsOn": [
 					{
@@ -52,6 +52,55 @@
 						"value": "@equals(item().parameters.TriggerTime, pipeline().parameters.TriggerTime)",
 						"type": "Expression"
 					}
+				}
+			},
+			{
+				"name": "For each Pipeline Run",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter Pipeline Runs by TriggerTime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter Pipeline Runs by TriggerTime').output.value",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Switch1",
+							"type": "Switch",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"on": {
+									"value": "@item().Status",
+									"type": "Expression"
+								},
+								"cases": [
+									{
+										"value": "Succeeded",
+										"activities": [
+											{
+												"name": "Set variable1",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": []
+											}
+										]
+									},
+									{
+										"value": "Failed"
+									}
+								]
+							}
+						}
+					]
 				}
 			}
 		],
