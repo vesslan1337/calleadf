@@ -47,8 +47,8 @@
 					},
 					"activities": [
 						{
-							"name": "Insert Error to SQL",
-							"type": "Lookup",
+							"name": "SP Insert Error",
+							"type": "SqlServerStoredProcedure",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
@@ -59,19 +59,41 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "@insert into [dbo].[TaskInstanceError]\nSELECT pipeline().parameters.runId, pipeline().parameters.PipelineName, item().ActivityName, item().ErrorMessage",
-										"type": "Expression"
+								"storedProcedureName": "[dbo].[pr_insertError]",
+								"storedProcedureParameters": {
+									"ActivityName": {
+										"value": {
+											"value": "@item().ActivityName",
+											"type": "Expression"
+										},
+										"type": "String"
 									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "GetSetMetadata",
-									"type": "DatasetReference"
+									"ErrorMessage": {
+										"value": {
+											"value": "@item().ErrorMessage",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"PipelineName": {
+										"value": {
+											"value": "@pipeline().parameters.PipelineName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"runId": {
+										"value": {
+											"value": "@pipeline().parameters.runId",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "SupportDatabase",
+								"type": "LinkedServiceReference"
 							}
 						}
 					]
