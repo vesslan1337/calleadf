@@ -92,7 +92,8 @@
 												"dependsOn": [],
 												"userProperties": [],
 												"typeProperties": {
-													"variableName": ""
+													"variableName": "WhatToDo",
+													"value": "Uppdatera [meta].[TaskInstance]"
 												}
 											}
 										]
@@ -106,7 +107,8 @@
 												"dependsOn": [],
 												"userProperties": [],
 												"typeProperties": {
-													"variableName": ""
+													"variableName": "WhatToDo",
+													"value": "Uppdatera [meta].[TaskInstance] och [meta].[TaskInstanceError]"
 												}
 											}
 										]
@@ -140,6 +142,9 @@
 			"QueryRunDays": {
 				"type": "String",
 				"defaultValue": "-7"
+			},
+			"WhatToDo": {
+				"type": "String"
 			}
 		},
 		"folder": {
