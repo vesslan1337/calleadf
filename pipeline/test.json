@@ -49,7 +49,7 @@
 						"type": "Expression"
 					},
 					"condition": {
-						"value": "@equals(item().runId, 'd5629496-4d3f-4ac0-a0d5-63ab1f59e3aa')",
+						"value": "@equals(item().parameters.TriggerTime, pipeline().parameters.TriggerTime)",
 						"type": "Expression"
 					}
 				}
