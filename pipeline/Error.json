@@ -59,10 +59,6 @@
 				"type": "String",
 				"defaultValue": "CalleADF"
 			},
-			"pipelineName": {
-				"type": "String",
-				"defaultValue": "Intentional Error"
-			},
 			"orchestratorName": {
 				"type": "String",
 				"defaultValue": "CalleDataFactory"
