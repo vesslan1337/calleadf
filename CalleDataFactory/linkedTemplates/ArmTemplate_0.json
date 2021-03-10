@@ -449,15 +449,18 @@
 				],
 				"parameters": {
 					"PipelineName": {
-						"type": "string"
+						"type": "string",
+						"defaultValue": "Task_copy1"
 					}
 				},
 				"variables": {
 					"SubscriptionId": {
-						"type": "String"
+						"type": "String",
+						"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
 					},
 					"ResourceGroupName": {
-						"type": "String"
+						"type": "String",
+						"defaultValue": "CalleADF"
 					},
 					"QueryRunDays": {
 						"type": "String",
@@ -860,6 +863,97 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Task_copy1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"description": "Framework development worker simulator.",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": {
+								"value": "@pipeline().parameters.WaitTime",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Raise Errors or Not",
+						"description": "Framework development worker simulator.",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "Wait1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@equals(pipeline().parameters.RaiseErrors,'true')",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "Call Fail Procedure",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.00:10:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[FailProcedure]",
+										"storedProcedureParameters": {
+											"RaiseError": {
+												"value": {
+													"value": "@pipeline().parameters.RaiseErrors",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "SupportDatabase",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"parameters": {
+					"RaiseErrors": {
+						"type": "string"
+					},
+					"WaitTime": {
+						"type": "string"
+					},
+					"TriggerTime": {
+						"type": "string"
+					}
+				},
+				"folder": {
+					"name": "Alt 2"
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SupportDatabase')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Error_copy1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1007,155 +1101,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/FrameworkFunctions')]",
-				"[concat(variables('factoryId'), '/linkedServices/SupportDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Task')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Wait1",
-						"description": "Framework development worker simulator.",
-						"type": "Wait",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": {
-								"value": "@pipeline().parameters.WaitTime",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Raise Errors or Not",
-						"description": "Framework development worker simulator.",
-						"type": "IfCondition",
-						"dependsOn": [
-							{
-								"activity": "Wait1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"expression": {
-								"value": "@equals(pipeline().parameters.RaiseErrors,'true')",
-								"type": "Expression"
-							},
-							"ifTrueActivities": [
-								{
-									"name": "Call Fail Procedure",
-									"type": "SqlServerStoredProcedure",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.00:10:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"storedProcedureName": "[[dbo].[FailProcedure]",
-										"storedProcedureParameters": {
-											"RaiseError": {
-												"value": {
-													"value": "@pipeline().parameters.RaiseErrors",
-													"type": "Expression"
-												},
-												"type": "String"
-											}
-										}
-									},
-									"linkedServiceName": {
-										"referenceName": "SupportDatabase",
-										"type": "LinkedServiceReference"
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Raise Errors or Not",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Error",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": false,
-							"parameters": {
-								"runId": {
-									"value": "@pipeline().RunId",
-									"type": "Expression"
-								},
-								"PipelineName": {
-									"value": "@pipeline().Pipeline",
-									"type": "Expression"
-								}
-							}
-						}
-					},
-					{
-						"name": "Execute Pipeline1_copy1",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Wait1",
-								"dependencyConditions": [
-									"Failed"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "Error",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": false,
-							"parameters": {
-								"runId": {
-									"value": "@pipeline().RunId",
-									"type": "Expression"
-								},
-								"PipelineName": {
-									"value": "@pipeline().Pipeline",
-									"type": "Expression"
-								}
-							}
-						}
-					}
-				],
-				"parameters": {
-					"RaiseErrors": {
-						"type": "string"
-					},
-					"WaitTime": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "Alt 1"
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/Error')]",
 				"[concat(variables('factoryId'), '/linkedServices/SupportDatabase')]"
 			]
 		}
