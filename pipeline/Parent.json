@@ -29,7 +29,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "Intentional Error",
+						"referenceName": "Task",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": false
