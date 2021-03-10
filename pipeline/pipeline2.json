@@ -5,16 +5,39 @@
 			{
 				"name": "Set variable1",
 				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Execute Pipeline1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "runid",
+					"value": {
+						"value": "@activity('Execute Pipeline1').output.RunId",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "testvar",
-					"value": "1"
+					"pipeline": {
+						"referenceName": "Intentional Error",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": false
 				}
 			}
 		],
 		"variables": {
-			"testvar": {
+			"runid": {
 				"type": "String"
 			}
 		},
