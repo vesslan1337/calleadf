@@ -90,12 +90,26 @@
 												"name": "Set variable1",
 												"type": "SetVariable",
 												"dependsOn": [],
-												"userProperties": []
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": ""
+												}
 											}
 										]
 									},
 									{
-										"value": "Failed"
+										"value": "Failed",
+										"activities": [
+											{
+												"name": "Set variable1_copy1",
+												"type": "SetVariable",
+												"dependsOn": [],
+												"userProperties": [],
+												"typeProperties": {
+													"variableName": ""
+												}
+											}
+										]
 									}
 								]
 							}
