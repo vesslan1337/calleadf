@@ -68,7 +68,10 @@
 			}
 		],
 		"parameters": {
-			"runId": {
+			"RaiseErrors": {
+				"type": "string"
+			},
+			"WaitTime": {
 				"type": "string"
 			}
 		},
