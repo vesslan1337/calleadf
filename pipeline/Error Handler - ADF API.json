@@ -26,6 +26,60 @@
 						"resource": "https://management.core.windows.net/"
 					}
 				}
+			},
+			{
+				"name": "SP Insert Error",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Get ADF Pipeline Run",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[pr_insertError]",
+					"storedProcedureParameters": {
+						"ActivityName": {
+							"value": null,
+							"type": "String"
+						},
+						"ErrorMessage": {
+							"value": {
+								"value": "@activity('Get ADF Pipeline Run').output.Message",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"PipelineName": {
+							"value": {
+								"value": "@activity('Get ADF Pipeline Run').output.pipelineName",
+								"type": "Expression"
+							},
+							"type": "String"
+						},
+						"runId": {
+							"value": {
+								"value": "@pipeline().parameters.runId",
+								"type": "Expression"
+							},
+							"type": "String"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "SupportDatabase",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"parameters": {
