@@ -1,34 +1,77 @@
 {
-	"name": "ErrorHandling",
+	"name": "Task",
 	"properties": {
 		"activities": [
 			{
-				"name": "Get Worker Pipeline Error Details_copy1",
-				"description": "Get the activity error details for the run ID of the worker pipeline called. Returns an array of all errors.",
-				"type": "AzureFunctionActivity",
+				"name": "Wait1",
+				"description": "Framework development worker simulator.",
+				"type": "Wait",
 				"dependsOn": [],
-				"policy": {
-					"timeout": "0.00:10:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
 				"userProperties": [],
 				"typeProperties": {
-					"functionName": "GetActivityErrors",
-					"method": "POST",
-					"body": {
-						"value": "@concat('\n{\n    \"tenantId\": \"',variables('tenantId'),'\",\n    \"applicationId\": \"',variables('applicationId'),'\",\n    \"authenticationKey\": \"',variables('authenticationKey'),'\",\n    \"subscriptionId\": \"',variables('subscriptionId'),'\",\n    \"resourceGroupName\": \"',variables('resourceGroupName'),'\",\n    \"orchestratorName\": \"',variables('orchestratorName'),'\",\n    \"orchestratorType\": \"',variables('orchestratorType'),'\",\n    \"pipelineName\": \"',variables('pipelineName'),'\",\n    \"runId\": \"',variables('runId'),'\"\n}')",
+					"waitTimeInSeconds": {
+						"value": "@pipeline().parameters.WaitTime",
 						"type": "Expression"
 					}
-				},
-				"linkedServiceName": {
-					"referenceName": "FrameworkFunctions",
-					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Raise Errors or Not",
+				"description": "Framework development worker simulator.",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(pipeline().parameters.RaiseErrors,'true')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Call Fail Procedure",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.00:10:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[FailProcedure]",
+								"storedProcedureParameters": {
+									"RaiseError": {
+										"value": {
+											"value": "@pipeline().parameters.RaiseErrors",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "SupportDatabase",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
 				}
 			}
 		],
+		"parameters": {
+			"runId": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
