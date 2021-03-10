@@ -80,7 +80,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "Error",
+						"referenceName": "Error Handler - Azure Function",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": false,
@@ -110,7 +110,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "Error",
+						"referenceName": "Error Handler - Azure Function",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": false,
