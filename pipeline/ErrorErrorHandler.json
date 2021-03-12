@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "https://management.azure.com/subscriptions/@{variables('sid')}/resourceGroups/@{variables('rg')}/providers/Microsoft.DataFactory/factories/@{pipeline().DataFactory}/pipelineruns/@{pipeline().parameters.runId}?api-version=2018-06-01",
+						"value": "https://management.azure.com/subscriptions/@{variables('sid')}/resourceGroups/@{variables('rg')}/providers/Microsoft.DataFactory/factories/@{pipeline().DataFactory}/pipelineruns/@{pipeline().parameters.runId}/queryActivityruns?api-version=2018-06-01",
 						"type": "Expression"
 					},
 					"method": "GET",
