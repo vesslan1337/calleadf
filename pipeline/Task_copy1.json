@@ -6,7 +6,14 @@
 				"name": "Wait1",
 				"description": "Framework development worker simulator.",
 				"type": "Wait",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Set variable1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"waitTimeInSeconds": {
@@ -65,6 +72,19 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "runId",
+					"value": {
+						"value": "@pipeline().RunId",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -76,6 +96,11 @@
 			},
 			"TriggerTime": {
 				"type": "string"
+			}
+		},
+		"variables": {
+			"runId": {
+				"type": "String"
 			}
 		},
 		"folder": {
