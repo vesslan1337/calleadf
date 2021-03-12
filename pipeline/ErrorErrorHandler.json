@@ -33,10 +33,12 @@
 		],
 		"parameters": {
 			"runId": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "46f0c8eb-51df-4e87-ab17-5b16a1834965"
 			},
 			"TriggerTime": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2021-03-01 12:00:12"
 			}
 		},
 		"variables": {
