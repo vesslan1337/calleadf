@@ -13,6 +13,28 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/GetSetMetadata')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Single generic dataset used to get and set all database metadata.",
+				"linkedServiceName": {
+					"referenceName": "SupportDatabase",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "_ProcFwk"
+				},
+				"annotations": [
+					"procfwk"
+				],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Parent_copy1')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -248,7 +270,9 @@
 				],
 				"lastPublishTime": "2021-03-09T09:59:01Z"
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GetSetMetadata')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/04-Infant')]",
@@ -1560,6 +1584,7 @@
 				"lastPublishTime": "2021-03-09T09:59:02Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GetSetMetadata')]",
 				"[concat(variables('factoryId'), '/pipelines/Throw Exception')]"
 			]
 		},
@@ -2400,6 +2425,7 @@
 				"lastPublishTime": "2021-03-09T09:59:02Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GetSetMetadata')]",
 				"[concat(variables('factoryId'), '/pipelines/Throw Exception')]"
 			]
 		},
@@ -3026,6 +3052,7 @@
 				"lastPublishTime": "2021-03-09T09:59:02Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GetSetMetadata')]",
 				"[concat(variables('factoryId'), '/pipelines/Throw Exception')]"
 			]
 		},
@@ -3189,6 +3216,7 @@
 				"lastPublishTime": "2021-03-09T09:59:03Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GetSetMetadata')]",
 				"[concat(variables('factoryId'), '/pipelines/04-Infant')]"
 			]
 		},
@@ -4202,6 +4230,7 @@
 				"lastPublishTime": "2021-03-09T09:59:04Z"
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/GetSetMetadata')]",
 				"[concat(variables('factoryId'), '/pipelines/Check For Running Pipeline')]",
 				"[concat(variables('factoryId'), '/pipelines/03-Child')]"
 			]

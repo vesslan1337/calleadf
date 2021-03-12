@@ -570,6 +570,60 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ErrorErrorHandler')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "https://management.azure.com/subscriptions/@{variables('sid')}/resourceGroups/@{variables('rg')}/providers/Microsoft.DataFactory/factories/@{pipeline().DataFactory}/pipelineruns/@{pipeline().parameters.runId}?api-version=2018-06-01",
+								"type": "Expression"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://management.core.windows.net/"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"runId": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"rg": {
+						"type": "String",
+						"defaultValue": "CalleADF"
+					},
+					"sid": {
+						"type": "String",
+						"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
+					}
+				},
+				"folder": {
+					"name": "Alt 2"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/FrameworkFunctions')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1055,14 +1109,7 @@
 						"name": "Wait1",
 						"description": "Framework development worker simulator.",
 						"type": "Wait",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"waitTimeInSeconds": {
@@ -1123,15 +1170,29 @@
 						}
 					},
 					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [],
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Raise Errors or Not",
+								"dependencyConditions": [
+									"Skipped",
+									"Failed"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "runId",
-							"value": {
-								"value": "@pipeline().RunId",
-								"type": "Expression"
+							"pipeline": {
+								"referenceName": "ErrorErrorHandler",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": false,
+							"parameters": {
+								"runId": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
 							}
 						}
 					}
@@ -1158,30 +1219,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/SupportDatabase')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/GetSetMetadata')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Single generic dataset used to get and set all database metadata.",
-				"linkedServiceName": {
-					"referenceName": "SupportDatabase",
-					"type": "LinkedServiceReference"
-				},
-				"folder": {
-					"name": "_ProcFwk"
-				},
-				"annotations": [
-					"procfwk"
-				],
-				"type": "AzureSqlTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ErrorErrorHandler')]",
 				"[concat(variables('factoryId'), '/linkedServices/SupportDatabase')]"
 			]
 		}

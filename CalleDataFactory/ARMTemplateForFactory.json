@@ -4821,14 +4821,7 @@
 						"name": "Wait1",
 						"description": "Framework development worker simulator.",
 						"type": "Wait",
-						"dependsOn": [
-							{
-								"activity": "Set variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
 							"waitTimeInSeconds": {
@@ -4889,15 +4882,29 @@
 						}
 					},
 					{
-						"name": "Set variable1",
-						"type": "SetVariable",
-						"dependsOn": [],
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Raise Errors or Not",
+								"dependencyConditions": [
+									"Skipped",
+									"Failed"
+								]
+							}
+						],
 						"userProperties": [],
 						"typeProperties": {
-							"variableName": "runId",
-							"value": {
-								"value": "@pipeline().RunId",
-								"type": "Expression"
+							"pipeline": {
+								"referenceName": "ErrorErrorHandler",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": false,
+							"parameters": {
+								"runId": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
 							}
 						}
 					}
@@ -4924,6 +4931,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/ErrorErrorHandler')]",
 				"[concat(variables('factoryId'), '/linkedServices/SupportDatabase')]"
 			]
 		},
@@ -5477,6 +5485,60 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/01-Grandparent')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ErrorErrorHandler')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": {
+								"value": "https://management.azure.com/subscriptions/@{variables('sid')}/resourceGroups/@{variables('rg')}/providers/Microsoft.DataFactory/factories/@{pipeline().DataFactory}/pipelineruns/@{pipeline().parameters.runId}?api-version=2018-06-01",
+								"type": "Expression"
+							},
+							"method": "GET",
+							"headers": {},
+							"authentication": {
+								"type": "MSI",
+								"resource": "https://management.core.windows.net/"
+							}
+						}
+					}
+				],
+				"parameters": {
+					"runId": {
+						"type": "string"
+					}
+				},
+				"variables": {
+					"rg": {
+						"type": "String",
+						"defaultValue": "CalleADF"
+					},
+					"sid": {
+						"type": "String",
+						"defaultValue": "41dbffdf-c52c-4c80-be57-e9da2439348a"
+					}
+				},
+				"folder": {
+					"name": "Alt 2"
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		}
 	]
 }
