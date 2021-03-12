@@ -29,6 +29,29 @@
 						"resource": "https://management.core.windows.net/"
 					}
 				}
+			},
+			{
+				"name": "Filter1",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Web1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Web1').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@equals(item().status, 'Failed')",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
